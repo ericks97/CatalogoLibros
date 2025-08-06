@@ -1,19 +1,24 @@
 package com.proyecto.literalura.CatalogoLibros.controller;
 
-
 import com.proyecto.literalura.CatalogoLibros.service.ConsumirApiService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 @RestController
 @RequestMapping("/api")
-public class StatusController {
-    @GetMapping("/status")
-    public Map<String, String> getStatus() {
-        return Map.of("status", "Aplicación en línea y funcionando correctamente");
+public class LibroController {
+
+    private final ConsumirApiService consumirApiService;
+
+    public LibroController(ConsumirApiService consumirApiService) {
+
+        this.consumirApiService = consumirApiService;
+    }
+
+    @GetMapping("/libros")
+    public String obtenerLibrosDesdeApi() {
+
+        return consumirApiService.obtenerDatos();
     }
 }
-
