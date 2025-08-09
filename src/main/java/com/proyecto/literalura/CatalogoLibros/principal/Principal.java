@@ -1,6 +1,7 @@
 package com.proyecto.literalura.CatalogoLibros.principal;
 
 import com.proyecto.literalura.CatalogoLibros.model.Autor;
+import com.proyecto.literalura.CatalogoLibros.service.AutorService;
 import com.proyecto.literalura.CatalogoLibros.service.LibroService;
 import com.proyecto.literalura.CatalogoLibros.model.Libro;
 
@@ -8,12 +9,14 @@ import org.springframework.stereotype.Component;
 
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 
 @Component
 public class Principal {
     private final LibroService libroService;
+    private final AutorService autorService;
     private Scanner sc = new Scanner(System.in);
     private int opcion;
     private String continuar;
@@ -28,8 +31,9 @@ public class Principal {
             """;
     private String preguntaContinuar = "¿Desea ver más libro[Y/N]?";
 
-    public Principal(LibroService libroService) {
+    public Principal(LibroService libroService, AutorService autorService) {
         this.libroService = libroService;
+        this.autorService = autorService;
 
     }
 
@@ -51,8 +55,7 @@ public class Principal {
                             listarAutoresRegistrados();
                             break;
                         case 4:
-                            //mostrarAutoresPorAño();
-                            System.out.println("4");
+                            ListarAutoresRegistradosPorAnio();
                             break;
                         case 5:
                             //mostarLibrosPorIdioma();
@@ -75,13 +78,34 @@ public class Principal {
                     continuar = "Y";
                 }
             } catch (InputMismatchException e) {
-                System.out.println("Error. Por favor ingrese solamente númerosl.");
+                System.out.println("Error. Por favor ingrese solamente números.");
                 sc.nextLine();
                 continuar = "Y";
             }
         } while (continuar.equalsIgnoreCase("Y"));
         System.out.println("Cerrando el programa. ¡Gracias por usar nuestros servicios!");
         System.exit(0);
+    }
+
+    private void ListarAutoresRegistradosPorAnio() {
+        System.out.println("Ingrese un año para ver los autores vivos: ");
+        Integer anio = sc.nextInt();
+        sc.nextLine();
+
+        List<Autor> resultadoAnio = autorService.obtenerAutoresVivosPorAnio(anio);
+
+        if (resultadoAnio.isEmpty()) {
+            System.out.println("No se encontraron autores vivos en el año " + anio);
+        } else {
+            System.out.println("------------------ Autores vivos en el año " + anio + " ------------------");
+            for (Autor autor : resultadoAnio) {
+                System.out.println("Nombre Autor: " + autor.getNombrePersona());
+                System.out.println("Fecha de Nacimiento: " + autor.getAnioNacimiento());
+                String anioFallecimiento = Objects.toString(autor.getAnioFallecimiento(), "El autor sigue vivo.");
+                System.out.println("Fecha de Fallecimiento: " + anioFallecimiento);
+                System.out.println("-----------------------------------------------------");
+            }
+        }
     }
 
 
@@ -136,7 +160,7 @@ public class Principal {
     }
     private void listarAutoresRegistrados(){
         System.out.println("Cargando autores registrados en la base de datos...");
-        List<Autor> autores = libroService.obtenerTodosLosAutores();
+        List<Autor> autores = autorService.obtenerTodosLosAutores();
 
         if (autores.isEmpty()){
             System.out.println("No hay autores registrados en nuestra base de datos.");

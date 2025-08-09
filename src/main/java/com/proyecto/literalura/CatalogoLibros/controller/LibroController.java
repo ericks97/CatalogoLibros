@@ -11,12 +11,4 @@ import java.util.List;
 @RequestMapping("/books")
 public class LibroController {
 
-    @Autowired
-    private LibroService libroService;
-
-    @GetMapping
-    public List<Libro> buscarLibroPorAutorYTitulo(@RequestParam("search") String busqueda) {
-        return libroService.buscarLibroPorAutorYTitulo(busqueda);
-    }
-
 }

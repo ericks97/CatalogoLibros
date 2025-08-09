@@ -17,12 +17,11 @@ import java.util.Optional;
 public class LibroService {
     private final ApiService apiService;
     private final LibroRepository libroRepository;
-    private final AutorRepository autorRepository;
+
 
     //Constructor que nos permitirá usar las variables de otras clases en en la clase Libro service.
-    public LibroService(LibroRepository libroRepository, AutorRepository autorRepository, ApiService apiService) {
+    public LibroService(LibroRepository libroRepository, ApiService apiService) {
         this.libroRepository = libroRepository;
-        this.autorRepository = autorRepository;
         this.apiService = apiService;
     }
 
@@ -59,20 +58,9 @@ public class LibroService {
     public List<Libro> obtenerTodosLosLibros() {
         return libroRepository.findAll();
     }
-
-    public List<Libro> buscarLibroPorAutorYTitulo(String busqueda) {
-        if (busqueda == null || busqueda.trim().isEmpty()) {
-            throw new IllegalArgumentException("La búsqueda no puede estar vacía.");
-        }
-
-        DatosBusqueda datosBusqueda = apiService.buscarLibrosEnAPI(busqueda);
-        return datosBusqueda.results();
-    }
-
-    public List<Autor> obtenerTodosLosAutores() {
-        return autorRepository.findAll();
-    }
 }
+
+
 
 
 
