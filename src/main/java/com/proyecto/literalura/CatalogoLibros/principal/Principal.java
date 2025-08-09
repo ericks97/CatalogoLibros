@@ -48,8 +48,7 @@ public class Principal {
                             listarLibrosRegistrados();
                             break;
                         case 3:
-                            //mostrarMisAutores();
-                            System.out.println("3");
+                            listarAutoresRegistrados();
                             break;
                         case 4:
                             //mostrarAutoresPorAño();
@@ -82,6 +81,7 @@ public class Principal {
             }
         } while (continuar.equalsIgnoreCase("Y"));
         System.out.println("Cerrando el programa. ¡Gracias por usar nuestros servicios!");
+        System.exit(0);
     }
 
 
@@ -133,5 +133,22 @@ public class Principal {
         return autores.stream()
                 .map(Autor::getNombrePersona)
                 .collect(Collectors.joining(", "));
+    }
+    private void listarAutoresRegistrados(){
+        System.out.println("Cargando autores registrados en la base de datos...");
+        List<Autor> autores = libroService.obtenerTodosLosAutores();
+
+        if (autores.isEmpty()){
+            System.out.println("No hay autores registrados en nuestra base de datos.");
+        }else {
+            System.out.println("------------------ Autores Registrados ------------------");
+            for (Autor autor : autores){
+                System.out.println("Nombre Autor: " + autor.getNombrePersona());
+                System.out.println("Fecha de Nacimiento: " + autor.getAnioNacimiento());
+                System.out.println("Fecha de Fallecimiento: " + (autor.getAnioFallecimiento() != null ? autor.getAnioFallecimiento() : "El autor sigue vivo."));
+                System.out.println("-----------------------------------------------------");
+            }
+        }
+
     }
 }
