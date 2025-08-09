@@ -1,32 +1,58 @@
 package com.proyecto.literalura.CatalogoLibros.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonAlias;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
+@Table(name = "libros")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Libro {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String nombre;
-    private String autor;
-    private int anioPublicacion;
-    private String editorial;
+    // ID de la API para evitar duplicados
+    @JsonAlias("id")
+    @Column(unique = true)
+    private Long gutendexId;
 
-    // Constructor vacío requerido por JPA
-    public Libro() {}
+    @JsonAlias("title")
+    private String titulo;
 
-    // Constructor con parámetros
-    public Libro(Long id, String nombre, String autor, int anioPublicacion, String editorial) {
-        this.id = id;
-        this.nombre = nombre;
-        this.autor = autor;
-        this.anioPublicacion = anioPublicacion;
-        this.editorial = editorial;
+    @JsonAlias("languages")
+    private List<String> idiomas;
+
+    @JsonAlias("download_count")
+    private Integer numeroDeDescargas;
+
+    // Mapeo de la lista de autores
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "libro_autor",
+            joinColumns = @JoinColumn(name = "libro_id"),
+            inverseJoinColumns = @JoinColumn(name = "autor_id"))
+    @JsonAlias("authors")
+    private List<Autor> autores;
+
+    // Mapeo de la lista de traductores
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "libro_traductor",
+            joinColumns = @JoinColumn(name = "libro_id"),
+            inverseJoinColumns = @JoinColumn(name = "traductor_id"))
+    @JsonAlias("translators")
+    private List<Autor> traductores;
+
+    public Libro(){}
+
+    public Libro(Long gutendexId, String titulo, List<String> idiomas, Integer numeroDeDescargas, List<Autor> autores, List<Autor> traductores) {
+        this.gutendexId = gutendexId;
+        this.titulo = titulo;
+        this.idiomas = idiomas;
+        this.numeroDeDescargas = numeroDeDescargas;
+        this.autores = autores;
+        this.traductores = traductores;
     }
 
     public Long getId() {
@@ -37,36 +63,52 @@ public class Libro {
         this.id = id;
     }
 
-    public String getNombre() {
-        return nombre;
+    public Long getGutendexId() {
+        return gutendexId;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
+    public void setGutendexId(Long gutendexId) {
+        this.gutendexId = gutendexId;
     }
 
-    public String getAutor() {
-        return autor;
+    public String getTitulo() {
+        return titulo;
     }
 
-    public void setAutor(String autor) {
-        this.autor = autor;
+    public void setTitulo(String titulo) {
+        this.titulo = titulo;
     }
 
-    public int getAnioPublicacion() {
-        return anioPublicacion;
+    public List<String> getIdiomas() {
+        return idiomas;
     }
 
-    public void setAnioPublicacion(int anioPublicacion) {
-        this.anioPublicacion = anioPublicacion;
+    public void setIdiomas(List<String> idiomas) {
+        this.idiomas = idiomas;
     }
 
-    public String getEditorial() {
-        return editorial;
+    public Integer getNumeroDeDescargas() {
+        return numeroDeDescargas;
     }
 
-    public void setEditorial(String editorial) {
-        this.editorial = editorial;
+    public void setNumeroDeDescargas(Integer numeroDeDescargas) {
+        this.numeroDeDescargas = numeroDeDescargas;
+    }
+
+    public List<Autor> getAutores() {
+        return autores;
+    }
+
+    public void setAutores(List<Autor> autores) {
+        this.autores = autores;
+    }
+
+    public List<Autor> getTraductores() {
+        return traductores;
+    }
+
+    public void setTraductores(List<Autor> traductores) {
+        this.traductores = traductores;
     }
 }
 

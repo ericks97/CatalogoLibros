@@ -8,6 +8,6 @@ import java.util.List;
 
 @Repository
 public interface LibroRepository extends JpaRepository<Libro, Long> {
-    //Método para buscar libros por nombre (usando la propiedad 'nombre' del modelo)//
-    List<Libro> findByNombre(String nombre);
+
+    List<Libro> findByTituloContainingIgnoreCase(String titulo);
 }

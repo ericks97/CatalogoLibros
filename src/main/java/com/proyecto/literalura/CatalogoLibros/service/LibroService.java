@@ -1,11 +1,10 @@
 package com.proyecto.literalura.CatalogoLibros.service;
 
 
+import com.proyecto.literalura.CatalogoLibros.model.DatosBusqueda;
 import com.proyecto.literalura.CatalogoLibros.model.Libro;
 import com.proyecto.literalura.CatalogoLibros.repository.LibroRepository;
-import org.springframework.http.client.reactive.JdkClientHttpConnector;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -13,32 +12,37 @@ import java.util.List;
 //@Service nos permitirá anunciar que esta clase es un servicio asi poder utilizarlo de ser necesario luego en controller
 @Service
 public class LibroService {
+    private final ApiService apiService;
     private final LibroRepository libroRepository;
-    private final WebClient webClient;
 
-    public LibroService(LibroRepository libroRepository, WebClient.Builder webClientBuilder) {
+    //Constructor que nos permitirá usar las variables de otras clases en en la clase Libro service.
+    public LibroService(LibroRepository libroRepository, ApiService apiService) {
         this.libroRepository = libroRepository;
-        this.webClient = webClientBuilder
-                .clientConnector(new JdkClientHttpConnector())
-                .build();
+        this.apiService = apiService;
     }
 
-    public String obtenerDatos() {
-        return webClient.get()
-                .uri("https://gutendex.com/books/")
-                .retrieve()
-                .bodyToMono(String.class)
-                .block();
-    }
-
-    public List<Libro> buscarLibroPorNombre(String nombre) {
-        if (nombre == null || nombre.trim().isEmpty()) {
-            throw new IllegalArgumentException("El nombre no puede estar vacío");
+    public List<Libro> buscarLibroPorTitulo(String nombreLibro) {
+        if (nombreLibro == null || nombreLibro.trim().isEmpty()) {
+            throw new IllegalArgumentException("El nombre del libro no puede estar vacio");
         }
-        return libroRepository.findByNombre(nombre);
+
+        DatosBusqueda datosBusqueda = apiService.buscarLibrosEnAPI(nombreLibro);
+        return datosBusqueda.results();
     }
 
-    public Libro guardarLibro(Libro libro) {
-        return libroRepository.save(libro);
+    public List<Libro> buscarLibroPorAutorYTitulo(String busqueda) {
+        if (busqueda == null || busqueda.trim().isEmpty()) {
+            throw new IllegalArgumentException("La búsqueda no puede estar vacía.");
+        }
+
+        DatosBusqueda datosBusqueda = apiService.buscarLibrosEnAPI(busqueda);
+        return datosBusqueda.results();
     }
 }
+
+
+
+
+
+
+
