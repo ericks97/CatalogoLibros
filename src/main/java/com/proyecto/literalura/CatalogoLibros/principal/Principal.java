@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 @Component
 public class Principal {
@@ -44,8 +45,7 @@ public class Principal {
                             buscarLibroPorTitulo();
                             break;
                         case 2:
-                            //mostarMisLibros();
-                            System.out.println("2");
+                            listarLibrosRegistrados();
                             break;
                         case 3:
                             //mostrarMisAutores();
@@ -105,5 +105,33 @@ public class Principal {
             System.out.println("Número de descargas: " + resultadoBusqueda.getNumeroDeDescargas());
             System.out.println("------------------------------------------");
         }
+    }
+
+    private void listarLibrosRegistrados() {
+        System.out.println("Cargando libros registrados en la base de datos...");
+        List<Libro> libros = libroService.obtenerTodosLosLibros();
+
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros registrados en la base de datos.");
+        } else {
+            System.out.println("------------------ Libros Registrados ------------------");
+            for (Libro libro : libros) {
+                System.out.println("Título: " + libro.getTitulo());
+                System.out.println("Autores: " + obtenerNombresDeAutores(libro.getAutores()));
+                System.out.println("Idiomas: " + String.join(", ", libro.getIdiomas()));
+                System.out.println("Número de descargas: " + libro.getNumeroDeDescargas());
+                System.out.println("-----------------------------------------------------");
+            }
+        }
+    }
+
+
+    private String obtenerNombresDeAutores(List<Autor> autores) {
+        if (autores == null || autores.isEmpty()) {
+            return "Desconocido";
+        }
+        return autores.stream()
+                .map(Autor::getNombrePersona)
+                .collect(Collectors.joining(", "));
     }
 }

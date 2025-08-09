@@ -52,6 +52,10 @@ public class LibroService {
         }
     }
 
+    public List<Libro> obtenerTodosLosLibros() {
+        return libroRepository.findAll();
+    }
+
     public List<Libro> buscarLibroPorAutorYTitulo(String busqueda) {
         if (busqueda == null || busqueda.trim().isEmpty()) {
             throw new IllegalArgumentException("La búsqueda no puede estar vacía.");
