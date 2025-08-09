@@ -16,28 +16,30 @@ public class Libro {
 
     // ID de la API para evitar duplicados
     @JsonAlias("id")
-    @Column(unique = true)
+    @Column(name = "gutendex_id", unique = true)
     private Long gutendexId;
 
     @JsonAlias("title")
     private String titulo;
 
+    // Mapeo para la lista de idiomas
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "libro_idiomas", joinColumns = @JoinColumn(name = "libro_id"))
+    @Column(name = "idioma")
     @JsonAlias("languages")
     private List<String> idiomas;
 
     @JsonAlias("download_count")
     private Integer numeroDeDescargas;
 
-    // Mapeo de la lista de autores
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "libro_autor",
             joinColumns = @JoinColumn(name = "libro_id"),
             inverseJoinColumns = @JoinColumn(name = "autor_id"))
     @JsonAlias("authors")
     private List<Autor> autores;
 
-    // Mapeo de la lista de traductores
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(name = "libro_traductor",
             joinColumns = @JoinColumn(name = "libro_id"),
             inverseJoinColumns = @JoinColumn(name = "traductor_id"))

@@ -89,23 +89,21 @@ public class Principal {
         System.out.println("Ingrese el título del libro que desea buscar:");
         String busqueda = sc.nextLine();
 
-        List<Libro> resultadoBusqueda = libroService.buscarLibroPorTitulo(busqueda);
+        Libro resultadoBusqueda = libroService.buscarLibroPorTitulo(busqueda);
 
-        if (resultadoBusqueda.isEmpty()) {
-            System.out.println("No se encontraron libro con ese título.");
+        if (resultadoBusqueda == null) {
+            System.out.println("No se encontraron libros con ese título.");
         } else {
-            System.out.println("Resultados encontrados:");
-            for (Libro libro : resultadoBusqueda) {
-                System.out.println("------------------------------------------");
-                System.out.println("Título: " + libro.getTitulo());
-                for (Autor aut : libro.getAutores()) {
-                    System.out.print("Autor: " + aut.getNombrePersona());
-                }
-                System.out.println();
-                System.out.println("Idiomas: " + String.join(", ", libro.getIdiomas()));
-                System.out.println("Número de descargas: " + libro.getNumeroDeDescargas());
-                System.out.println("------------------------------------------");
+            System.out.println("Resultado encontrado:");
+            System.out.println("------------------------------------------");
+            System.out.println("Título: " + resultadoBusqueda.getTitulo());
+            for (Autor aut : resultadoBusqueda.getAutores()) {
+                System.out.print("Autor: " + aut.getNombrePersona());
             }
+            System.out.println();
+            System.out.println("Idiomas: " + String.join(", ", resultadoBusqueda.getIdiomas()));
+            System.out.println("Número de descargas: " + resultadoBusqueda.getNumeroDeDescargas());
+            System.out.println("------------------------------------------");
         }
     }
 }
