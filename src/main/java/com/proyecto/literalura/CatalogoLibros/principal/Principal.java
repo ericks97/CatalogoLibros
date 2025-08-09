@@ -58,7 +58,7 @@ public class Principal {
                             ListarAutoresRegistradosPorAnio();
                             break;
                         case 5:
-                            //mostarLibrosPorIdioma();
+                            listarLibrosPorIdioma();
                             System.out.println("5");
                             break;
                     }
@@ -174,5 +174,33 @@ public class Principal {
             }
         }
 
+    }
+
+    private void listarLibrosPorIdioma() {
+        System.out.println("Escriba el idioma para filtrar los libros:");
+        System.out.println("es: español");
+        System.out.println("en: ingles");
+        System.out.println("fr: frances");
+        System.out.println("pt: portugues");
+
+        String idioma = sc.nextLine().toLowerCase();
+
+        // Lógica para validar que la opción sea una de las permitidas
+        if (idioma.equals("es") || idioma.equals("en") || idioma.equals("fr") || idioma.equals("pt")) {
+            List<Libro> librosPorIdioma = libroService.obtenerLibrosPorIdioma(idioma);
+
+            if (librosPorIdioma.isEmpty()) {
+                System.out.println("No se encontraron libros en ese idioma.");
+            } else {
+                System.out.println("------------------ Libros en " + idioma + " ------------------");
+                for (Libro libro : librosPorIdioma) {
+                    System.out.println("Título: " + libro.getTitulo());
+                    System.out.println("Autor: " + obtenerNombresDeAutores(libro.getAutores()));
+                    System.out.println("-----------------------------------------------------");
+                }
+            }
+        } else {
+            System.out.println("Opción de idioma no válida. Por favor, intente de nuevo.");
+        }
     }
 }

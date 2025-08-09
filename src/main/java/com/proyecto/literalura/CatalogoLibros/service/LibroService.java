@@ -1,10 +1,9 @@
 package com.proyecto.literalura.CatalogoLibros.service;
 
 
-import com.proyecto.literalura.CatalogoLibros.model.Autor;
+
 import com.proyecto.literalura.CatalogoLibros.model.DatosBusqueda;
 import com.proyecto.literalura.CatalogoLibros.model.Libro;
-import com.proyecto.literalura.CatalogoLibros.repository.AutorRepository;
 import com.proyecto.literalura.CatalogoLibros.repository.LibroRepository;
 import org.springframework.stereotype.Service;
 
@@ -58,6 +57,12 @@ public class LibroService {
     public List<Libro> obtenerTodosLosLibros() {
         return libroRepository.findAll();
     }
+
+    public List<Libro> obtenerLibrosPorIdioma(String idioma) {
+        return libroRepository.findByIdiomasContaining(idioma);
+    }
+
+
 }
 
 
